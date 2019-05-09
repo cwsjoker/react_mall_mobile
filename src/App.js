@@ -13,7 +13,7 @@ import Igo_bt from './pages/activity/IGO_BT';
 class App extends Component {
   render() {
     return (
-      <Router>
+      <Router basename={'/mobile/#'}>
         <Switch>
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />

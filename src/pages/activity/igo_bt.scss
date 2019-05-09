@@ -1,0 +1,142 @@
+.btPage {
+    padding: 30px 0px 20px;
+    color: #fff;
+    background: linear-gradient(53deg, #482382 0%, #2D2A94);
+    box-sizing: border-box;
+    h2 {
+        color: #F9F9F9;
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    >p {
+        padding: 0 15px;
+        color: #DFDFDF;
+        font-size: 12px;
+        text-align: center;
+        &:nth-child(4) {
+            margin-top: 20px;
+        }
+        &:nth-child(5) {
+            margin-top: 20px;
+        }
+    }
+    .bg-main {
+        margin-top: 30px;
+        box-sizing: border-box;
+        width: 100%;
+        // height: 500px;
+        background-image: url('../../assets/images/ziyuan.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        .tip {
+            margin-bottom: 30px;
+            padding: 0 15px;
+            color: #DFDFDF;
+            font-size: 12px;
+            text-align: center;
+        }
+        .table-box {
+            color: #9B9B9B;
+            padding: 0 15px;
+            box-sizing: border-box;
+            font-size: 12px;
+            .table-title {
+                display: flex;
+                background: #000000;
+                background-color: rgba(0,0,0,0.4982);
+                border-radius: 4px 4px 0px 0px;
+                span {
+                    display: inline-block;
+                    height: 24px;
+                    line-height: 24px;
+                    &:nth-child(1) {
+                        width: 25%;
+                        text-align: center;
+                    }
+                    &:nth-child(2) {
+                        width: 20%;
+                        text-align: left;
+                    }
+                    &:nth-child(3) {
+                        width: 25%;
+                        text-align: right;
+                    }
+                    &:nth-child(4) {
+                        width: 30%;
+                        text-align: center;
+                    }
+                }
+            }
+            .table-tr {
+                display: flex;
+                padding: 5px 0;
+                height: 34px;
+                font-size: 6px;
+                background: #000000;
+                margin-bottom: 1px;
+                border-radius: 4px 4px 4px 4px;
+                background-color: rgba(0,0,0,0.4982);
+                span {
+                    color: #fff;
+                    display: inline-block;
+                    &:nth-child(1) {
+                        width: 25%;
+                        line-height: 34px;
+                        text-align: center;
+                    }
+                    &:nth-child(2) {
+                        width: 20%;
+                        text-align: left;
+                    }
+                    &:nth-child(3) {
+                        width: 25%;
+                        text-align: right;
+                    }
+                    &:nth-child(4) {
+                        width: 30%;
+                        text-align: center;
+                    }
+                    em {
+                        color: #19A279;
+                    }
+                    b {
+                        color: #9B9B9B;
+                        font-weight: 500;
+                    }
+                }
+                &:nth-child(2) {
+                    background: #000000;
+                    margin-bottom: 1px;
+                    border-radius: 0px 0px 4px 4px;
+                    background-color: rgba(0,0,0,0.4982);
+                }
+            }
+        }
+        .table-footer {
+            padding: 0 15px;
+            .table-footer-box {
+                margin-top: 30px;
+                padding: 15px 10px;
+                background: #000000;
+                background-color: rgba(0,0,0,0.3971);
+                p {
+                    color: #AE4E54;
+                    font-size: 12px;
+                    line-height: 16px;
+                    text-align: center;
+                }
+            }
+        }
+    }
+    .active-footer {
+        margin-top: 30px;
+        padding: 0 15px;
+        font-size: 12px;
+        text-align: center;
+        a {
+            color: #4A90E2;
+            cursor: pointer;
+        }
+    }
+}

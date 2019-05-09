@@ -2,9 +2,11 @@
   "name": "react_mall_mobile",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "antd-mobile": "^2.2.11",
     "axios": "^0.18.0",
+    "jquery": "^3.4.1",
     "js-cookie": "^2.2.0",
     "node-sass": "^4.11.0",
     "react": "^16.8.5",

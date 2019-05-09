@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import Header from '../../components/header/Header'
 import Tab from '../../components/tab/Tab'
 import Menu from '../../components/menu/Menu'
@@ -16,29 +17,30 @@ const Home = class Home extends Component {
         }
     }
     componentDidMount() {
-        // 每日精选
-        $home_api.getDailyList().then(async res => {
-            if (res) {
-                console.log(res);
-                // const data = await changeUsdt(res.data.data);
-                const data = res.data.data.slice(0, 4);
-                this.setState({
-                    daily_list: data
-                    // daily_spinning: false
-                })
-            }
-        })
+        this.props.history.push('/login');
+        // // 每日精选
+        // $home_api.getDailyList().then(async res => {
+        //     if (res) {
+        //         console.log(res);
+        //         // const data = await changeUsdt(res.data.data);
+        //         const data = res.data.data.slice(0, 4);
+        //         this.setState({
+        //             daily_list: data
+        //             // daily_spinning: false
+        //         })
+        //     }
+        // })
 
-        // 热门推荐
-        $home_api.getHotList().then(async res => {
-            if (res) {
-                const data = await changeUsdt(res.data.data);
-                this.setState({
-                    hot_list: data
-                    // hot_list_spinning: false
-                })
-            }
-        })
+        // // 热门推荐
+        // $home_api.getHotList().then(async res => {
+        //     if (res) {
+        //         const data = await changeUsdt(res.data.data);
+        //         this.setState({
+        //             hot_list: data
+        //             // hot_list_spinning: false
+        //         })
+        //     }
+        // })
     }
 
     render() {
@@ -103,4 +105,4 @@ const Home = class Home extends Component {
     }
 }
 
-export default Home;
+export default withRouter(Home);
