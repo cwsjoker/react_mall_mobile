@@ -17,7 +17,7 @@ const Home = class Home extends Component {
         }
     }
     componentDidMount() {
-        this.props.history.push('/login');
+        this.props.history.push('/register');
         // // 每日精选
         // $home_api.getDailyList().then(async res => {
         //     if (res) {

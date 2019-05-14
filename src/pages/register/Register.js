@@ -133,7 +133,7 @@ class Register extends Component {
                 if (res.success) {
                     Toast.hide();
                     Toast.success('注册成功', 1.5, () => {
-                        this.props.history.push('/login');
+                        this.props.history.push('/IGO');
                     });
                 } else {
                     Toast.hide();
@@ -210,18 +210,18 @@ class Register extends Component {
                 </div>
                 <div className="register-form">
                     <div className="input-item">
-                        <input type="text" placeholder="请输入手机号码" value={userName} onChange={this.onChangeUserName.bind(this)} />
+                        <input type="text" placeholder="请输入手机号码" value={userName} maxLength={11} onChange={this.onChangeUserName.bind(this)} />
                     </div>
                     <div className="input-item">
-                        <input type={isShowPws ? 'text' : 'password'} placeholder="请输入登录密码" autoComplete="off" value={password} onChange={this.onChangePassword.bind(this)} />
+                        <input type={isShowPws ? 'text' : 'password'} placeholder="请输入登录密码" maxLength={20} autoComplete="off" value={password} onChange={this.onChangePassword.bind(this)} />
                         <i className={isShowPws ? 'on bt-showpwd' : 'off bt-showpwd'} onClick={this.changeShowPwd.bind(this)}></i>
                     </div>
                     <div className="input-tip">至少6位字符，非纯数字</div>
                     <div className="input-item">
-                        <input type={isShowTradePwd ? 'text' : 'password'} placeholder="请输入交易密码" autoComplete="off" value={tradePwd} onChange={this.onChangeTradePwd.bind(this)} />
+                        <input type={isShowTradePwd ? 'text' : 'password'} placeholder="请输入交易密码" maxLength={6} autoComplete="off" value={tradePwd} onChange={this.onChangeTradePwd.bind(this)} />
                         <i className={isShowTradePwd ? 'on bt-showpwd' : 'off bt-showpwd'} onClick={this.changeShowTradePwd.bind(this)}></i>
                     </div>
-                    <div className="input-tip">用于交易提现，请牢记。不可与登录密码相同</div>
+                    <div className="input-tip">6位纯数字</div>
                     <div id="captcha"></div>
                     <div className="input-item input-item-t">
                         <input style={{'paddingRight': '120px'}} type="text" placeholder="短信验证码" value={mobileCode} onChange={this.onChangeMobileCode.bind(this)} />
@@ -231,7 +231,8 @@ class Register extends Component {
                 <div className="register-submit" onClick={this.register.bind(this)}>注册</div>
                 <div className="login-footer">
                     您已经是bttmall用户?
-                    <Link to={'/login'}>立即登录</Link>
+                    {/* <Link to={'/login'}>立即登录</Link> */}
+                    <a href="https://bttmall.com/login">立即登录</a>
                 </div>
                 <div className="register-footer">
                     <p>1、Bttmall Token(BT)将于5月13日火热发售 </p>
