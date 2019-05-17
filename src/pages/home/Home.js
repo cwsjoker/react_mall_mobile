@@ -55,7 +55,7 @@ const Home = class Home extends Component {
                                     return (
                                         <li key={item.id}>
                                             <div>
-                                                <img src={window.BACK_URL + item.imageUrl} alt="" />
+                                               <a href="/goodsDetail"><img src={window.BACK_URL + item.imageUrl} alt="" /></a>
                                             </div>
                                             <div>
                                                 <p>{item.goodsName}</p>
