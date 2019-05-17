@@ -36,7 +36,7 @@ const Menu = class Menu extends Component {
                                         this.state.menuList.map(item => {
                                             return (
                                                 <li key={item.producerId}>
-                                                    <Link to={'/'}>
+                                                    <Link to={'/storeIndex?id=' + item.producerId}>
                                                         <div>
                                                             <img src={item.logo} alt="" />
                                                             <div className="menu-name">{item.NAME}</div>

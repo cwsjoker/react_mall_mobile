@@ -9,6 +9,7 @@ import Layout from './pages/layout/Layout';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
 import Igo_bt from './pages/activity/IGO_BT';
+import Promote from './pages/activity/Promote';
 
 class App extends Component {
   render() {
@@ -18,6 +19,7 @@ class App extends Component {
           <Route exact path="/login" component={Login} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/IGO" component={Igo_bt} />
+          <Route exact path="/promote" component={Promote} />
           <Route path="/" component={Layout} />
         </Switch>
       </Router>

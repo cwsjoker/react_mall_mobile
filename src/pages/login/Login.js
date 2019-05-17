@@ -73,17 +73,22 @@ class Login extends Component {
                     Toast.fail('请输入正确的手机号', 1.5);
                 } else {
                     Toast.loading('正在登录', 0);
-                    $.post('https://bttmall.com/loginCheck', {
+                    // $.post('https://bttmall.com/loginCheck', {
                     // $.post('http://192.168.2.134:80/loginCheck', {
+                    // $.post(window.location.origin + '/loginCheck', {
+                    $.post(window.BTTMALL_API + '/loginCheck', {
                         userName: Number(userName),
                         password: mMd5.hbmd5(password),
                         validate: validate,
                         rememberMe: false
                     }, (res) => {
                         if (res.success) {
+                            Cookie.set('username', userName.trim(), { expires: 1 });
+                            Cookie.set('token', res.shopToken, { expires: 1 });
                             Toast.hide();
                             Toast.success('登录成功', 1.5, () => {
-                                this.props.history.push('/IGO');
+                                // this.props.history.push('/IGO');
+                                this.props.history.push('/promote');
                             });
                         } else {
                             Toast.hide();

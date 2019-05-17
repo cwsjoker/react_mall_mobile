@@ -3,9 +3,11 @@ import { Link }  from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { Toast } from 'antd-mobile';
 import mMd5 from '../../utils/module_md5.js';
+import { getQueryString } from '../../utils/operLocation';
 import $ from  'jquery'
-
+import Cookie from 'js-cookie';
 import './register.scss';
+
 
 class Register extends Component {
     constructor() {
@@ -20,7 +22,7 @@ class Register extends Component {
             validate: '',
             captchaIns: null,
             isShowPws: false,
-            isShowTradePwd: false
+            isShowTradePwd: false,
         }
     }
     componentDidMount() {
@@ -69,7 +71,9 @@ class Register extends Component {
                     Toast.fail('请输入正确的手机号', 1.5);
                     return;
                 } else {
-                    $.get('https://bttmall.com/sendCode?mobile=' + userName + '&validate=' + validate + '&areaCode=86', (res) => {
+                    // $.get('https://bttmall.com/sendCode?mobile=' + userName + '&validate=' + validate + '&areaCode=86', (res) => {
+                    // $.get(window.location.origin + '/sendCode?mobile=' + userName + '&validate=' + validate + '&areaCode=86', (res) => {
+                    $.get(window.BTTMALL_API + '/sendCode?mobile=' + userName + '&validate=' + validate + '&areaCode=86', (res) => {
                         if (res.success) {
                             Toast.success('短信验证码已发送', 1.5);
                         } else {
@@ -122,18 +126,29 @@ class Register extends Component {
                 return;
             }
             Toast.loading('正在登录', 0);
-            $.post('https://bttmall.com/reg', {
+            let query = {};
+            const code = getQueryString(window.location.href).code;
+            if (code) {
+                query['promoterCode'] = code;
+            }
+            // $.post('https://bttmall.com/reg', {
+            // $.post('http://192.168.2.134:80/reg', {
+            // $.post(window.location.origin + '/reg', {
+            $.post(window.BTTMALL_API + '/reg', {
                 areaCode: 86,
                 userName: Number(userName),
                 password: mMd5.hbmd5(password),
                 tradePwd: mMd5.hbmd5(tradePwd),
                 NECaptchaValidate: validate,
-                mobileCode: Number(mobileCode)
+                mobileCode: Number(mobileCode),
+                ...query
             }, (res) => {
                 if (res.success) {
+                    Cookie.set('username', userName.trim(), { expires: 1 });
                     Toast.hide();
                     Toast.success('注册成功', 1.5, () => {
-                        this.props.history.push('/IGO');
+                        // this.props.history.push('/IGO');
+                        this.props.history.push('/promote');
                     });
                 } else {
                     Toast.hide();
@@ -224,15 +239,15 @@ class Register extends Component {
                     <div className="input-tip">6位纯数字</div>
                     <div id="captcha"></div>
                     <div className="input-item input-item-t">
-                        <input style={{'paddingRight': '120px'}} type="text" placeholder="短信验证码" value={mobileCode} onChange={this.onChangeMobileCode.bind(this)} />
+                        <input style={{'paddingRight': '120px'}} type="text" placeholder="短信验证码" value={mobileCode} maxLength={6} onChange={this.onChangeMobileCode.bind(this)} />
                         <div className="input-code-btn" onClick={this.getCode.bind(this)}>获取短信验证码</div>
                     </div>
                 </div>
                 <div className="register-submit" onClick={this.register.bind(this)}>注册</div>
                 <div className="login-footer">
                     您已经是bttmall用户?
-                    {/* <Link to={'/login'}>立即登录</Link> */}
-                    <a href="https://bttmall.com/login">立即登录</a>
+                    <Link to={'/login'}>立即登录</Link>
+                    {/* <a href="https://bttmall.com/login">立即登录</a> */}
                 </div>
                 <div className="register-footer">
                     <p>1、Bttmall Token(BT)将于5月13日火热发售 </p>

@@ -8,6 +8,10 @@ import Cookie from 'js-cookie';
 // console.log(process.env);
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? 'http://47.52.66.81:8080' : process.env.REACT_APP_API_URL;
+// global.BTTMALL_API = process.env.NODE_ENV === 'development' ? 'http://192.168.2.134' : process.env.REACT_APP_API_URL;
+global.BTTMALL_API = 'http://47.52.202.171';
+// global.BTTMALL_API = 'https://bttmall.com';
+// global.BTTMALL_API = 'https://bttmall.com';
 
 axios.interceptors.request.use(function (config) {
     const token = Cookie.get('token');

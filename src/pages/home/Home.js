@@ -17,30 +17,30 @@ const Home = class Home extends Component {
         }
     }
     componentDidMount() {
-        this.props.history.push('/register');
+        // this.props.history.push('/register');
         // // 每日精选
-        // $home_api.getDailyList().then(async res => {
-        //     if (res) {
-        //         console.log(res);
-        //         // const data = await changeUsdt(res.data.data);
-        //         const data = res.data.data.slice(0, 4);
-        //         this.setState({
-        //             daily_list: data
-        //             // daily_spinning: false
-        //         })
-        //     }
-        // })
+        $home_api.getDailyList().then(async res => {
+            if (res) {
+                console.log(res);
+                // const data = await changeUsdt(res.data.data);
+                const data = res.data.data.slice(0, 4);
+                this.setState({
+                    daily_list: data
+                    // daily_spinning: false
+                })
+            }
+        })
 
-        // // 热门推荐
-        // $home_api.getHotList().then(async res => {
-        //     if (res) {
-        //         const data = await changeUsdt(res.data.data);
-        //         this.setState({
-        //             hot_list: data
-        //             // hot_list_spinning: false
-        //         })
-        //     }
-        // })
+        // 热门推荐
+        $home_api.getHotList().then(async res => {
+            if (res) {
+                const data = await changeUsdt(res.data.data);
+                this.setState({
+                    hot_list: data
+                    // hot_list_spinning: false
+                })
+            }
+        })
     }
 
     render() {
