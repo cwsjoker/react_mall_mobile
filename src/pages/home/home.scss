@@ -12,14 +12,19 @@
                 line-height: 22px;
             }
             ul {
+                display: flex;
+                flex-wrap: wrap;
+                align-content: flex-start;
                 width: 100%;
                 li {
-                    float: left;
+                    // float: left;
+                    flex: 48%;
                     margin-top: 15px;
                     width: 165px;
                     height: 225px;
                     background: #fff;
                     border-radius: 4px;
+                    box-sizing: border-box;
                     >div:nth-child(1) {
                         padding: 15px;
                         width: 100%;
@@ -31,7 +36,7 @@
                         }
                     }
                     &:nth-child(1), &:nth-child(3) {
-                        margin-right: 15px;
+                        margin-right: 4%;
                     }
                     >div:nth-child(2) {
                         width: 100%;

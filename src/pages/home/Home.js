@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import Header from '../../components/header/Header'
 import Tab from '../../components/tab/Tab'
+import Menu from '../../components/menu/Menu'
 import $home_api from '../../fetch/api/home.js'
 import changeUsdt from '../../utils/convertUsdt'
 
@@ -15,7 +17,8 @@ const Home = class Home extends Component {
         }
     }
     componentDidMount() {
-        // 每日精选
+        // this.props.history.push('/register');
+        // // 每日精选
         $home_api.getDailyList().then(async res => {
             if (res) {
                 console.log(res);
@@ -45,11 +48,12 @@ const Home = class Home extends Component {
         return (
             <div className="homePage">
                <Header />
+               <Menu />
                 <div className="homePage-main">
                     {/* 每日精选 */}
                     <div className="daily-main">
                         <h2>每日精选</h2>
-                        <ul className="cleafix">
+                        <ul>
                             {
                                 daily_list.map(item => {
                                     return (
@@ -101,4 +105,4 @@ const Home = class Home extends Component {
     }
 }
 
-export default Home;
+export default withRouter(Home);

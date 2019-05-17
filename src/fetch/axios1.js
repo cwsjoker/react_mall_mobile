@@ -1,17 +1,7 @@
 import axios from 'axios';
 import Cookie from 'js-cookie';
 
-// xhr请求带上seetion
-// axios.defaults.withCredentials = true
-
-// console.log(process)
-// console.log(process.env);
-
-axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? 'http://47.52.66.81:8080' : process.env.REACT_APP_API_URL;
-// global.BTTMALL_API = process.env.NODE_ENV === 'development' ? 'http://192.168.2.134' : process.env.REACT_APP_API_URL;
-global.BTTMALL_API = 'http://47.52.202.171';
-// global.BTTMALL_API = 'https://bttmall.com';
-// global.BTTMALL_API = 'https://bttmall.com';
+axios.defaults.baseURL = process.env.NODE_ENV === 'development' ? 'http://localhost' : process.env.REACT_APP_API_URL;
 
 axios.interceptors.request.use(function (config) {
     const token = Cookie.get('token');
@@ -36,7 +26,7 @@ axios.interceptors.response.use(function (response) {
 export default axios;
 
 global.URLCONFIGJSON = {emulateJson: true, headers: {"Content-Type": "application/json",'X-Request-Uri':'/'}};
-global.URLCONFIGFORMDATA = {emulateJson: true, headers: {"Content-Type": "multipart/form-data",'X-Request-Uri':'/'}};
+global.URLCONFIGFORMDATA = {emulateJson: true, headers: {"Content-Type": "application/x-www-form-urlencoded"}};
 global.BACK_URL = 'http://ltalk-website.oss-cn-hangzhou.aliyuncs.com/';   //图片地址
 
 // 交易所地址

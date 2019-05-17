@@ -1,0 +1,1 @@
+global.BTTMALL_API = process.env.NODE_ENV === 'development' ? 'http://192.168.2.134' : process.env.REACT_APP_API_URL;
