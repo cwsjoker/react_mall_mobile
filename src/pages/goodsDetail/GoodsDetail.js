@@ -1,112 +1,247 @@
 import React, { Component } from 'react';
+import { Link }  from 'react-router-dom';
+import { Carousel, Icon } from 'antd-mobile';
 import $home_api from '../../fetch/api/home.js';
-import changeUsdt from '../../utils/convertUsdt';
-import Tab from '../../components/tab/Tab';
+// import changeUsdt from '../../utils/convertUsdt';
+import { operateScript, unescapeHTML } from '../../utils/operation.js';
+import { getQueryString } from '../../utils/operLocation.js'
+// import Tab from '../../components/tab/Tab';
 import './goodsdetail.scss';
+import default_img from '../../assets/images/logo.png'
 
 const GoodsDetail = class GoodsDetail extends Component {
     constructor() {
         super()
         this.state = {
-            hot_list: []
+            goods: {},
+            goodsInventory: [],
+            keyList: [],
+            producerId: '',
+            goodsParam: [],
+            choose: [],
+            goodsInfo_price: {},
+            goods_info_img: [],
+            change_price_usdt: 0,
+            show_modal_buy: false, // 购买，加入购物车
         }
     }
-    componentDidMount() {
-// 热门推荐
-        $home_api.getHotList().then(async res => {
-            if (res) {
-                 console.log(res);
-                const data = await changeUsdt(res.data.data);
+    async  componentDidMount() {
+        const { goodsId } = getQueryString(this.props.location.search);
+        console.log(goodsId);
+        if (goodsId) {
+            const goodsDetail_res = await $home_api.getGoodsDetail({'goodsId': goodsId});
+            if (goodsDetail_res) {
+                const { goods, goodsInventory, keyList } = goodsDetail_res.data.data;
+                const { producerId } = goods;
                 this.setState({
-                    hot_list: data
-                    // hot_list_spinning: false
+                    goods: goods,
+                    goodsInventory: goodsInventory || [],
+                    keyList: keyList || [],
+                    goodsParam: JSON.parse(goods.goodsParam),
+                });
+
+                // 初始化默认选择第一个配置,
+                if (keyList && keyList.length !== 0) {
+                    const choose_list = keyList.map(item => {
+                        return goodsInventory[item][0]['id'];
+                    })
+                    this.setState({
+                        choose: choose_list,
+                    }, () => {
+                        this.getForByGoodsPrice(goodsId);
+                    })
+                } else {
+                    this.getForByGoodsPrice(goodsId);
+                }
+            }
+        }
+    }
+    // 根据型号查询商品的价格信息
+    async getForByGoodsPrice(goodsId) {
+        const propertyGroup = this.state.choose.join(',');
+        let query = {}
+        if (propertyGroup !== '') {
+            query = {
+                'goodsId': goodsId,
+                'propertyGroup': propertyGroup
+            }
+        } else {
+            query = {
+                'goodsId': goodsId,
+            }
+        }
+        const priceInfo_res = await $home_api.getByGoodsQueryPrice(query)
+        if (priceInfo_res) {
+            this.setState({
+                goodsInfo_price: priceInfo_res.data.data,
+                goods_info_img: [priceInfo_res.data.data.smallImageUrl]
+            })
+            const { price, symbol } = priceInfo_res.data.data;
+            this.trnasformUSDT(price, symbol);
+        }
+    }
+    // 切换颜色版本号
+    choose_color_model(v) {
+        // 选择已经选择的id直接返回
+        if (this.state.choose.includes(v.id)) {
+            return;
+        }
+        // // 先获取选择配置位于哪个组别
+        let list = [];
+        this.state.keyList.forEach(item => {
+            this.state.goodsInventory[item].forEach(item1 => {
+                if (item1.id === v.id) {
+                    list = this.state.goodsInventory[item];
+                }
+            })
+        })
+        // // 将该组别的在已选择的全部移除， 并把当前选择加入新配置数组中,更新state后重新请求价格
+        let choose_list = this.state.choose;
+        list.forEach(item => {
+            if (choose_list.includes(item.id)) {
+                choose_list.forEach((item1, i) => {
+                    if (item1 === item.id) {
+                        choose_list.splice(i, 1);
+                    }
                 })
             }
         })
+        choose_list.push(v.id);
+        this.setState({
+            choose: choose_list
+        }, () => {
+            const { goodsId } = getQueryString(this.props.location.search);
+            this.getForByGoodsPrice(goodsId);
+        })
+    }
+    // 获取币种转未usdt的换算值
+    async trnasformUSDT(price, symbol) {
+        const usdt_res = await $home_api.getUSDT({coinAmount: price, originalType: symbol});
+        if (usdt_res) {
+            this.setState({
+                change_price_usdt: usdt_res.data.data.targetCoinAmount
+            })
+        }
+    }
+    // 加入购物车或者立即购买
+    joinShopCart(type) {
+        
     }
     render() {
-
-
+        const { goods_info_img, goods, goodsInfo_price, change_price_usdt, goodsParam, keyList, goodsInventory, choose, show_modal_buy } = this.state;
         return (
-            <div className="goodslist">
-                <div className="waitpay">
-                        <div className="waitpay_1_1">
-                            <div className="waitpay_1_1_1">等待支付</div>
-                            <div className="waitpay_1_1_2">剩余时间：12:00:00</div>
-                        </div>
-                    <div className="waitpaylist">
-                        <div className="waitpayaddress">
-                            <strong><span>王女士</span>  <span>1389292223</span></strong>
-                        </div>
-                        <div className="waitaddress">
-                          <ul>
-                              <li><span>地址：</span><span>1389292223</span></li>
-                              <li><span>线路、</span><span>1389292223</span></li>
-                          </ul>
-            
-                        </div>
+            <div className="goodDetailPage">
+                <Carousel
+                    autoplay={false}
+                    infinite
+                    height={450}
+                >
+                    {
+                        goods_info_img.length !== 0 ? (
+                            goods_info_img.map(val => (
+                                <img
+                                    key={val}
+                                    src={window.BACK_URL + val}
+                                    alt=""
+                                    style={{ width: '100%', verticalAlign: 'top' }}
+                                />
+                            ))
+                        ) : (
+                            <img
+                                key="1"
+                                src={default_img}
+                                alt=""
+                                style={{ width: '100%', verticalAlign: 'top' }}
+                            />
+                        )
+                    }
+                </Carousel>
+                <div className="goods-info">
+                    <div>
+                        <span>直营</span>
+                        <span>{goods.name}</span>
+                        <Link to={'/storeIndex?id=3'}>进店</Link>
+                    </div>
+                    <div>{goodsInfo_price.introduce}</div>
+                    <div>
+                        <span>{`${goodsInfo_price.price}${goodsInfo_price.symbol}`}</span>
+                        <span>≈{change_price_usdt}USDT</span>
+                        <span>销量: {goodsInfo_price.sales}</span>
                     </div>
                 </div>
-                <div className="stroe">
-                    <div className="stroe_one">
-                        <div className="stroe_one_1"></div>
-                        <div className="stroe_one_2"></div>
+                <div className="goods-detail-box">
+                    <div className="goods-param-list">
+                        {
+                            goodsParam.map((item, index) => {
+                                return (
+                                    <div key={index}>
+                                        <span>{item.key}：</span>{item.value}
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
-                    <div className="stroe_two">
-                        <div className="stroe_two_1">
-                            MMT 官方直营店 >
-                        </div>
-                      </div>
-                      <div className="stroe_two_start">
-                            <div className="stroe_two_0">
-                                <div className="stroe_two_2">
-                                        <div className="stroe_two_2_1"></div>
-                                        <div className="stroe_two_2_2">
-                                            <div className="stroe_two_2_2_1">戴尔DELL游匣G3烈焰版 17.3英寸游戏笔记本电脑</div>
-                                            <div className="stroe_two_2_2_2">
-                                                <ul>
-                                                    <li>颜色：红色 </li>
-                                                    <li>版本：256GB</li>
-                                                </ul>
-                                            </div>
-                                        </div>
+                    <div className="goods-param-detai">
+                        <span dangerouslySetInnerHTML={{ __html: unescapeHTML(goods.detail)}}></span>
+                    </div>
+                </div>
+                {/* 购买 加入购物车 */}
+                <div className="goods-detail-footer">
+                    <div>1</div>
+                    <div>2</div>
+                    <div onClick={() => this.setState({show_modal_buy: true})}>加入购物车</div>
+                    <div onClick={() => this.setState({show_modal_buy: true})}>立即购买</div>
+                </div>
+                {/* 购买 */}
+                {
+                    show_modal_buy ? (
+                        <div className="goods-buy-box">
+                            <div className="goods-buy-main">
+                                <div>
+                                    <Icon type={`cross`} onClick={() => this.setState({show_modal_buy: false})} />
+                                </div>
+                                <div className="goods-buy-main-info">
+                                    <div>
+                                        <img src={window.BACK_URL + goodsInfo_price.smallImageUrl} alt="" />
+                                    </div>
+                                    <div>
+                                        <p>{goodsInfo_price.price + goodsInfo_price.symbol}<span>≈{change_price_usdt}USDT</span></p>
+                                        {/* <p>商品编号: 154545</p> */}
                                     </div>
                                 </div>
-                        </div>
-                </div>
-                <div className="foottitle">
-                    <div className="foottitle_1">
-                         <div className="foottitle_1_1">
-                            <div className="foottitle_1_1_1">
-                                <div className="foottitle_1_1_1_1">
-                                    <ul>
-                                        <li>订单编号：1828128912902901 </li>
-                                        <li><input type="button" value="复制"  className="input_name"></input></li>
-                                    </ul>
+                                <div className="goods-buy-main-type">
+                                    {
+                                        keyList.map((item, index) => {
+                                            return (
+                                                <div key={index}>
+                                                    <p>{item}</p>
+                                                    <div>
+                                                        {
+                                                            goodsInventory[item].map((v, i) => {
+                                                                return (
+                                                                    <span 
+                                                                        key={i}
+                                                                        className={choose.includes(v.id) ? 'on' : ''}
+                                                                        onClick={this.choose_color_model.bind(this, v)}
+                                                                    >{v.name}</span>
+                                                                )
+                                                            })
+                                                        }
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                    <div>
+                                        <p>购买方式</p>
+                                        <div><span className="on">货币支付</span></div>
+                                    </div>
                                 </div>
+                                <button>确定</button>
                             </div>
-                            <div className="foottitle_2">下单时间：2019-04-08 11:40:10</div>
                         </div>
-                    </div>
-                    <div className="foottitle_3_222">
-                        <div className="foottitle_3">
-                        支付方式：货币支付
-                        </div>
-                    </div>
-                    <div className="foottitle_4">
-                        <div className="footer_start"></div>
-                        <div className="footer_start_st">
-                            <div className="footer_start_st_1"></div>
-                            <div className="footer_start_st_2"> 
-                                <div className="footer_start_st_3"> </div>
-                                    <div className="state_footer">取消订单</div>
-                                    <div className="state_footer_1">支付</div>    
-                            </div>
-                      </div>
-                    </div>
-                </div>
-                
-                <Tab />
+                    ) : null
+                }
             </div>
         )
     }

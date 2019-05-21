@@ -5,6 +5,7 @@ import Home from '../pages/home/Home' // 首页
 import ShopCart  from '../pages/shopCart/ShopCart' // 购物车页面
 import GoodsDetail  from '../pages/goodsDetail/GoodsDetail' // 商品详情
 import StoreIndex from '../pages/storeIndex/StoreIndex' // 店铺
+import OrderDetail from '../pages/order/OrderDetail'
 
 export default () => {
     return (
@@ -13,6 +14,7 @@ export default () => {
             <Route path="/storeIndex" component={StoreIndex} />
             <Route path="/shopCart" component={ShopCart} />
             <Route path="/goodsDetail" component={GoodsDetail} />
+            <Route path="/orderDetail" component={OrderDetail} />
         </Switch>
     )
 }

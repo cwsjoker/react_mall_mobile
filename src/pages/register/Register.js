@@ -27,7 +27,12 @@ class Register extends Component {
     }
     componentDidMount() {
         if (!(/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent))) {
-            window.location.href = 'https://bttmall.com/register';
+            const code = getQueryString(window.location.href).code;
+            if (code) {
+                window.location.href = 'https://bttmall.com/register?promoterCode=' + code;
+            } else {
+                window.location.href = 'https://bttmall.com/register';
+            }
         }
         const that = this;
         window.initNECaptcha({

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link }  from 'react-router-dom'
 import Header from '../../components/header/Header'
 import Menu from '../../components/menu/Menu'
 import $home_api from '../../fetch/api/home'
@@ -157,22 +158,24 @@ const StoreIndex = class StoreIndex extends Component {
                             produceList.map(item =>{
                                 return (
                                     <div className="store-list-item" key={item.id}>
-                                        <div className="item-img">
-                                            <img  src={window.BACK_URL + item.imageUrl} alt="" />
-                                        </div>
-                                        <div className="item-info">
-                                            <div>
-                                                <span>官方直营</span>
-                                                {item.name}
+                                        <Link to={`/goodsDetail?goodsId=${item.id}`}>
+                                            <div className="item-img">
+                                                <img  src={window.BACK_URL + item.imageUrl} alt="" />
                                             </div>
-                                            <div>{item.inventoryIntroduce}</div>
-                                            <div>
-                                                {item.price + ' ' + item.symbol}
-                                                {
-                                                    Number(item.change_price_usdt) ? <span>≈{item.change_price_usdt}USDT</span> : null
-                                                }
+                                            <div className="item-info">
+                                                <div>
+                                                    <span>官方直营</span>
+                                                    {item.name}
+                                                </div>
+                                                <div>{item.inventoryIntroduce}</div>
+                                                <div>
+                                                    {item.price + ' ' + item.symbol}
+                                                    {
+                                                        Number(item.change_price_usdt) ? <span>≈{item.change_price_usdt}USDT</span> : null
+                                                    }
+                                                </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     </div>
                                 )
                             })
