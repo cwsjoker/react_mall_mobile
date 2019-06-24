@@ -1,50 +1,84 @@
 .shopcartlist{
-.shoplist{
- width: 90%;
- height: 144px;
- margin: 0 auto;
- background-color: aqua;
- .shoplist_1{
-     width: 100%;
-     height: 24px;
-     background-color: red;
-     .shoplist_1_1{
-         width:50%;
-         height: 100%;
-         float: left;
-
-     }
-     .shoplist_1_2{
-        width:50%;
-        height: 1005;
-        float: right;
-
+    background: #F4F4F4;
+    .store-box {
+        .store-header {
+            display: flex;
+            width: 100%;
+            height: 49px;
+            >div {
+                height: 100%;
+                &:nth-child(1) {
+                    width: 40px;
+                }
+                &:nth-child(2) {
+                    flex: 1;
+                    color: #333333;
+                    font-size: 14px;
+                    line-height: 49px;
+                    >img {
+                        width: 20px;
+                        height: 20px;
+                        margin: 15px 10px 0px;
+                    }
+                }
+            }
+        }
+        .store-body {
+            .goods-box {
+                display: flex;
+                width: 100%;
+                height: 110px;
+                >div {
+                    &:nth-child(1) {
+                        width: 40px;
+                    }
+                    &:nth-child(2) {
+                        width: 90px;
+                        .img-box {
+                            margin-top: 10px;
+                            width: 90px;
+                            height: 90px;
+                            padding: 10px;
+                            box-sizing: border-box;
+                            >img {
+                                width: 100%;
+                                height: 100%;
+                                border: 0;
+                            }
+                        }
+                    }
+                    &:nth-child(3) {
+                        flex: 1;
+                        padding-right: 10px;
+                        box-sizing: border-box;
+                        >div {
+                            &:nth-child(1) {
+                                margin-top: 20px;
+                                color: #333333;
+                                font-size: 13px;
+                            }
+                            &:nth-child(2) {
+                                display: flex;
+                                margin-top: 10px;
+                                justify-content: space-between;
+                                >div {
+                                    &:nth-child(1) {
+                                        color: #AE4E54;
+                                        font-size: 16px;
+                                    }
+                                    &:nth-child(2) {
+                                        >span {
+                                            background: #F4F4F4;
+                                            color: #333333;
+                                            padding: 0 15px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                }
+            }
+        }
     }
- }
- .shoplist_2{
-    width: 100%;
-    height: 70px;
-    background-color: blue;
-}
-.shoplist_3{
-    width: 100%;
-    height: 50px;
-    background-color: red;
-    .shoplist_1_3{
-        width:50%;
-        height: 100%;
-        float: left;
-
-    }
-    .shoplist_1_4{
-       width:50%;
-       height: 100%;
-       float: right;
-
-   }
-}
-}
-
-
-
 }

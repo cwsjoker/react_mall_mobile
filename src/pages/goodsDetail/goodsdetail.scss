@@ -93,27 +93,41 @@
         box-sizing: border-box;
         >div {
             cursor: pointer;
-            &:nth-child(1) {
-                width: 15%;
-            }
             &:nth-child(2) {
-                width: 15%;
-            }
-            &:nth-child(3) {
-                width: 35%;
+                width: 40%;
                 background: #444444;
                 color: #fff;
                 font-size: 18px;
                 line-height: 50px;
                 text-align: center;
             }
-            &:nth-child(4) {
-                width: 35%;
+            &:nth-child(3) {
+                width: 40%;
                 background: #AE4E54;
                 color: #fff;
                 font-size: 18px;
                 line-height: 50px;
                 text-align: center;
+            }
+        }
+        >a {
+            cursor: pointer;
+            &:nth-child(1) {
+                position: relative;
+                width: 20%;
+                >em {
+                    position: absolute;
+                    top: 10px;
+                    right: 20px;
+                    width: 16px;
+                    height: 16px;
+                    background: #FC4F45;
+                    color: #fff;
+                    font-size: 12px;
+                    line-height: 16px;
+                    text-align: center;
+                    border-radius: 50%;
+                }
             }
         }
     }

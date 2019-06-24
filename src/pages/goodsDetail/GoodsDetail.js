@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link }  from 'react-router-dom';
-import { Carousel, Icon } from 'antd-mobile';
+import { Carousel, Icon, Toast } from 'antd-mobile';
 import $home_api from '../../fetch/api/home.js';
 // import changeUsdt from '../../utils/convertUsdt';
 import { operateScript, unescapeHTML } from '../../utils/operation.js';
@@ -23,9 +23,14 @@ const GoodsDetail = class GoodsDetail extends Component {
             goods_info_img: [],
             change_price_usdt: 0,
             show_modal_buy: false, // 购买，加入购物车
+            buy_type: '', // 购买类型
+            storeInfo: {},
+            // nimingInfo: {}
+            shopCart_len: 0
         }
     }
     async  componentDidMount() {
+        this.onShopCartNum();
         const { goodsId } = getQueryString(this.props.location.search);
         console.log(goodsId);
         if (goodsId) {
@@ -53,7 +58,33 @@ const GoodsDetail = class GoodsDetail extends Component {
                 } else {
                     this.getForByGoodsPrice(goodsId);
                 }
+
+                // 商铺详情    挖矿详情
+                const [storeInfo_res] = await Promise.all([
+                    $home_api.getStoreInfo({'producerId': producerId}),
+                    // $home_api.getDayNiming({'producerId': producerId})
+                ]);
+
+                if (storeInfo_res) {
+                    // 初始化面包屑数据
+                    this.setState({
+                        storeInfo: storeInfo_res.data.data,
+                    })
+                }
+                
+                // if (niming_res) {
+                //     this.setState({
+                //         nimingInfo: niming_res.data.data[0]
+                //     })
+                // }
             }
+        }
+    }
+    // 计算购物车数量
+    onShopCartNum() {
+        const list = JSON.parse(localStorage.getItem('shopCartList'));
+        if (list) {
+            this.setState({shopCart_len: list.length})
         }
     }
     // 根据型号查询商品的价格信息
@@ -124,11 +155,51 @@ const GoodsDetail = class GoodsDetail extends Component {
         }
     }
     // 加入购物车或者立即购买
-    joinShopCart(type) {
-        
+    joinShopCart() {
+        console.log(this.state.buy_type);
+        const buyNowGoodsInforObj = {
+            'goodsId': this.state.goods.id, //商品ID
+            'producerId': this.state.goods.producerId, //商户ID
+            'storeName': this.state.storeInfo.name, //商户名称
+            'storeLogo': this.state.storeInfo.logoUrl, //商户logo
+            'goodsIntroduce': this.state.goodsInfo_price.introduce, //商品简介
+            'goodsNum': this.state.buy_number, //商品数量
+            'goodsPrice': this.state.goodsInfo_price.price, //商品价格
+            'inventoryid': this.state.goodsInfo_price.id,//库存主键
+            'goodsImgUrl': this.state.goodsInfo_price.smallImageUrl, //商品图片
+            'propertyGroupGoods': this.state.choose.join(','), //库存类型
+            'inventoryGoods': this.state.goodsInfo_price.stock, //库存
+            'payWay': '代币支付', //支付方式
+            // 'vrepeat': goodsId+inventoryid,//校验重复
+            'symbol': this.state.goodsInfo_price.symbol
+        };
+        if (this.state.buy_type === 'buy') {
+            // 立即购买
+            const choose_list = [];
+            choose_list.push(buyNowGoodsInforObj)
+            localStorage.orderList = JSON.stringify(choose_list);
+            // this.props.history.push('/confirmOrder');
+        } else {
+            // 加入购物车
+            let list = JSON.parse(localStorage.getItem('shopCartList')) || [];
+            // 1.商品id不同  2.id相同类型不同  3.id相同类型相同数量叠加
+            let is_goods = false;
+            list.forEach(v => {
+                if (v.goodsId === buyNowGoodsInforObj.goodsId && v.propertyGroupGoods.split(',').sort().join(',') === buyNowGoodsInforObj.propertyGroupGoods.split(',').sort().join(',')) {
+                    // v.goodsNum += buyNowGoodsInforObj.goodsNum;
+                    is_goods = true;
+                }
+            })
+            if (!is_goods) {
+                list.push(buyNowGoodsInforObj);
+            }
+            localStorage.setItem('shopCartList', JSON.stringify(list));
+            this.onShopCartNum();
+            Toast.success('商品已加入购物车');
+        }
     }
     render() {
-        const { goods_info_img, goods, goodsInfo_price, change_price_usdt, goodsParam, keyList, goodsInventory, choose, show_modal_buy } = this.state;
+        const { goods_info_img, goods, goodsInfo_price, change_price_usdt, goodsParam, keyList, goodsInventory, choose, show_modal_buy, shopCart_len } = this.state;
         return (
             <div className="goodDetailPage">
                 <Carousel
@@ -187,10 +258,13 @@ const GoodsDetail = class GoodsDetail extends Component {
                 </div>
                 {/* 购买 加入购物车 */}
                 <div className="goods-detail-footer">
-                    <div>1</div>
-                    <div>2</div>
-                    <div onClick={() => this.setState({show_modal_buy: true})}>加入购物车</div>
-                    <div onClick={() => this.setState({show_modal_buy: true})}>立即购买</div>
+                    {/* <Link></Link> */}
+                    <Link to={'/shopCart'}>
+                        <em>{shopCart_len}</em>
+                        购物车
+                    </Link>
+                    <div onClick={() => this.setState({show_modal_buy: true, buy_type: 'join'})}>加入购物车</div>
+                    <div onClick={() => this.setState({show_modal_buy: true, buy_type: 'buy'})}>立即购买</div>
                 </div>
                 {/* 购买 */}
                 {
@@ -237,7 +311,7 @@ const GoodsDetail = class GoodsDetail extends Component {
                                         <div><span className="on">货币支付</span></div>
                                     </div>
                                 </div>
-                                <button>确定</button>
+                                <button onClick={this.joinShopCart.bind(this)}>确定</button>
                             </div>
                         </div>
                     ) : null
