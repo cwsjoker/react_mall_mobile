@@ -5,7 +5,7 @@
   "homepage": ".",
   "dependencies": {
     "antd-mobile": "^2.2.11",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "env-cmd": "^9.0.1",
     "html2canvas": "^1.0.0-rc.1",
     "jquery": "^3.4.1",
